@@ -13,3 +13,6 @@ curl -i \
 -d '{"id":null, "name":"Updated Course", "category":"Development"}' \
 -H "Content-Type: application/json" \
 -X PUT http://localhost:8080/v1/courses/1
+
+DELETE COURSE
+curl -i -X DELETE http://localhost:8080/v1/courses/1

@@ -87,4 +87,19 @@ class CourseControllerIntgTest {
         assertEquals("Kotlin 2, Now its personal", updatedCourse!!.name)
         assertEquals("Comedy", updatedCourse!!.category)
     }
+
+    @Test
+    fun deleteCourse(){
+        // Save a new course in the database
+        val course = Course(
+            null, "Kotlin", "Development"
+        )
+        courseRepository.save(course)
+
+        val updatedCourse = webTestClient
+            .delete()
+            .uri("/v1/courses/{courseId}", course.id)
+            .exchange()
+            .expectStatus().isNoContent
+    }
 }
