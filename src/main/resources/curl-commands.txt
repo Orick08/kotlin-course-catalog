@@ -1,0 +1,15 @@
+CREATE CURSE:
+
+curl -i \
+-d '{"id":null, "name":"New Test Course", "category":"Kotlin"}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8080/v1/courses
+
+GET COURSES:
+curl -i http://localhost:8080/v1/courses
+
+UPDATE COURSE
+curl -i \
+-d '{"id":null, "name":"Updated Course", "category":"Development"}' \
+-H "Content-Type: application/json" \
+-X PUT http://localhost:8080/v1/courses/1
