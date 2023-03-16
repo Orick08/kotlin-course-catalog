@@ -1,6 +1,7 @@
 package com.kotlingspring.controller
 
 import com.kotlingspring.dto.CourseDTO
+import com.kotlingspring.entity.Course
 import com.kotlingspring.repository.CourseRepository
 import com.kotlingspring.util.courseEntityList
 import org.junit.jupiter.api.Assertions
@@ -59,5 +60,31 @@ class CourseControllerIntgTest {
 
         println("courseDTOs: $courseDTOs")
         assertEquals(3, courseDTOs!!.size)
+    }
+
+    @Test
+    fun updateCourse(){
+        // Save a new course in the database
+        val course = Course(
+            null, "Kotlin", "Development"
+        )
+        courseRepository.save(course)
+        // New course values
+        val updatedCourseDTO = CourseDTO(
+            null, "Kotlin 2, Now its personal", "Comedy"
+        )
+
+        val updatedCourse = webTestClient
+            .put()
+            .uri("/v1/courses/{courseId}", course.id)
+            .bodyValue(updatedCourseDTO)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(CourseDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        assertEquals("Kotlin 2, Now its personal", updatedCourse!!.name)
+        assertEquals("Comedy", updatedCourse!!.category)
     }
 }
