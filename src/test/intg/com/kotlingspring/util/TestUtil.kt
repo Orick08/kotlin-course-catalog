@@ -1,5 +1,6 @@
 package com.kotlingspring.util
 
+import com.kotlingspring.dto.CourseDTO
 import com.kotlingspring.entity.Course
 
 fun courseEntityList() = listOf(
@@ -12,4 +13,16 @@ fun courseEntityList() = listOf(
     Course(
         null, "Social Life for Java Developers", "Development"
     )
+)
+
+fun courseDTO(
+    id: Int? = null,
+    name: String = "Build RestFul APis using Spring Boot and Kotlin",
+    category: String = "Development",
+    //instructorId: Int? = 1
+) = CourseDTO(
+    id,
+    name,
+    category,
+    //instructorId
 )
