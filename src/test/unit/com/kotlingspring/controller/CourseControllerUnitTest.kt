@@ -9,11 +9,13 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.runs
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
 
 @WebMvcTest(controllers = [CoursesController::class])
 @AutoConfigureWebTestClient
@@ -41,6 +43,44 @@ class CourseControllerUnitTest {
         Assertions.assertTrue{
             savedCourseDTO!!.id != null
         }
+    }
+
+    @Test
+    fun courseValidation(){
+        val courseDTO = CourseDTO(null, "", "")
+
+        every { courseServiceMock.addCourse(any()) } returns courseDTO(id = 1)
+
+        val response = webTestClient
+            .post()
+            .uri("/v1/courses")
+            .bodyValue(courseDTO)
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectBody(String::class.java)
+            .returnResult()
+            .responseBody
+
+        assertEquals("courseDTO.category should not be blank, courseDTO.name should not be blank", response)
+    }
+
+    @Test
+    fun courseRuntimeException(){
+        val courseDTO = CourseDTO(null, "Test Course", "Test")
+        val errorMessage = "Unexpected error"
+        every { courseServiceMock.addCourse(any()) } throws RuntimeException(errorMessage)
+
+        val response = webTestClient
+            .post()
+            .uri("/v1/courses")
+            .bodyValue(courseDTO)
+            .exchange()
+            .expectStatus().is5xxServerError
+            .expectBody(String::class.java)
+            .returnResult()
+            .responseBody
+
+        assertEquals(errorMessage, response)
     }
 
     @Test
