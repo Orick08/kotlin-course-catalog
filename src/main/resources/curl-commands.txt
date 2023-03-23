@@ -16,3 +16,9 @@ curl -i \
 
 DELETE COURSE
 curl -i -X DELETE http://localhost:8080/v1/courses/1
+
+CREATE INSTRUCTOR:
+curl -i \
+-d '{"id":null, "name":"Erick Amezcua"}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8080/v1/instructors
