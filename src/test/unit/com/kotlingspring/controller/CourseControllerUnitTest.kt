@@ -85,7 +85,7 @@ class CourseControllerUnitTest {
 
     @Test
     fun retrieveAllCourses(){
-        every { courseServiceMock.retrieveAllCourses() }.returnsMany(
+        every { courseServiceMock.retrieveAllCourses(any()) }.returnsMany(
             listOf(
                 courseDTO(1, "Hello world"),
                 courseDTO(2, "Test book"),
