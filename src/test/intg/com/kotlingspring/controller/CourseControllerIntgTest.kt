@@ -3,7 +3,9 @@ package com.kotlingspring.controller
 import com.kotlingspring.dto.CourseDTO
 import com.kotlingspring.entity.Course
 import com.kotlingspring.repository.CourseRepository
+import com.kotlingspring.repository.InstructorRepository
 import com.kotlingspring.util.courseEntityList
+import com.kotlingspring.util.instructorEntity
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -23,17 +25,23 @@ class CourseControllerIntgTest {
     lateinit var webTestClient: WebTestClient
     @Autowired
     lateinit var courseRepository: CourseRepository
+    @Autowired
+    lateinit var instructorRepository: InstructorRepository
 
     @BeforeEach
     fun setUp(){
         courseRepository.deleteAll()
-        val courses = courseEntityList()
+        instructorRepository.deleteAll()
+        val instructor = instructorEntity()
+        instructorRepository.save(instructor)
+        val courses = courseEntityList(instructor)
         courseRepository.saveAll(courses)
     }
 
     @Test
     fun addCourse(){
-        val courseDTO = CourseDTO(null, "Test Course", "Test")
+        val instructor = instructorRepository.findAll().first()
+        val courseDTO = CourseDTO(null, "Test Course", "Test", instructor.id)
         val savedCourseDTO = webTestClient
             .post()
             .uri("/v1/courses")
@@ -84,14 +92,15 @@ class CourseControllerIntgTest {
 
     @Test
     fun updateCourse(){
+        val instructor = instructorRepository.findAll().first()
         // Save a new course in the database
         val course = Course(
-            null, "Kotlin", "Development"
+            null, "Kotlin", "Development", instructor
         )
         courseRepository.save(course)
         // New course values
         val updatedCourseDTO = CourseDTO(
-            null, "Kotlin 2, Now its personal", "Comedy"
+            null, "Kotlin 2, Now its personal", "Comedy", course.instructor!!.id
         )
 
         val updatedCourse = webTestClient
@@ -110,9 +119,10 @@ class CourseControllerIntgTest {
 
     @Test
     fun deleteCourse(){
+        val instructor = instructorRepository.findAll().first()
         // Save a new course in the database
         val course = Course(
-            null, "Kotlin", "Development"
+            null, "Kotlin", "Development", instructor
         )
         courseRepository.save(course)
 
