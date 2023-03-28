@@ -31,14 +31,14 @@ fun courseDTO(
 
 fun courseEntityList(instructor: Instructor? = null) = listOf(
     Course(null,
-        "Build RestFul APis using SpringBoot and Kotlin", "Development",
+        "Build REST APIS with Kotlin Spring boot", "Development",
         instructor),
     Course(null,
-        "Build Reactive Microservices using Spring WebFlux/SpringBoot", "Development"
+        "Micronauting with Micronaut", "Development"
         ,instructor
     ),
     Course(null,
-        "Wiremock for Java Developers", "Development" ,
+        "Social Life for Java Developers", "Development" ,
         instructor)
 )
 
